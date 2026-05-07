@@ -66,12 +66,25 @@ let dataState = {
 
 async function publicarResultados() {
     try {
-        // Guardamos el objeto dataState completo en la colección "resultados"
+        // 1. Forzamos a que dataState tenga una sección para los análisis
+        dataState.analisisIA = {}; 
+
+        // 2. Recorremos los IDs de tus cuadros de texto (los que definimos arriba)
+        idsIA.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                // Guardamos el valor actual que escribiste en el cuadro
+                dataState.analisisIA[id] = el.value; 
+            }
+        });
+
+        // 3. Enviamos el objeto completo a Firebase
         await setDoc(doc(db, "resultados", "encuesta_actual"), dataState);
-        alert("✅ ¡Éxito! Los resultados ahora son públicos para todos los usuarios.");
+        
+        alert("✅ ¡Éxito! Se han guardado los datos y tus análisis de texto.");
     } catch (error) {
         console.error("Error al publicar:", error);
-        alert("❌ Error al subir los datos a Firebase.");
+        alert("❌ Error: No se pudo guardar en la nube. Revisa la consola.");
     }
 }
 
