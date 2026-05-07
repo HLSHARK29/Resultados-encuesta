@@ -257,7 +257,7 @@ function consolidarFila(f, tipo) {
         finanPreferencia: buscarValor(f, ["preferirías que se financiaran"]),
         finanSugerencia: buscarValor(f, ["sugieres que se financien"]),
         preferenciaServicio: buscarValor(f, ["conforme con el servicio", "seguridad privada", "empresa de seguridad"]),
-        comentariosPreferencia: buscarValor(f, ["¿por qué?", "justificación", "motivo de su elección"]),
+        comentariosPreferencia: buscarValor(f, ["Anota tus sugerencias", "por qué", "justificación"]),
         mejoraAspectos: buscarValor(f, ["mejorar", "aspectos que deberían mejorarse"]),
         // Bloque 7: Representantes
         repConoce: buscarValor(f, ["Conoces quién o quiénes son el o los representantes"]),
