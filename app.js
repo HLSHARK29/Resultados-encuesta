@@ -365,6 +365,17 @@ function actualizarUI() {
         containerExpPortero.innerHTML = dataState.metricasPorteros.experienciaGeneral.map(c => `<p class="opinion-item"><strong>${c.plaza}:</strong> ${c.texto}</p>`).join('') || `<p class="placeholder">Sin comentarios adicionales.</p>`;
     }
 
+    // --- NUEVO: CARGAR TEXTOS DE ANÁLISIS IA GUARDADOS ---
+    if (dataState.analisisIA) {
+        Object.keys(dataState.analisisIA).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.value = dataState.analisisIA[id];
+            }
+        });
+    }
+    // ----------------------------------------------------
+
     generarAnalisisAutomatico();
     renderCharts();
 }
