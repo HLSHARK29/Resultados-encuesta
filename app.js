@@ -1,9 +1,26 @@
 /**
  * APP: Dashboard - Análisis de Encuestas
- * Ajustes: Implementación Bloque 10 (Experiencia y Entorno) y unificación de lógica.
+ * Ajustes: Implementación de Firebase Firestore para persistencia de datos.
  * PARTE 1 DE 2
  */
 
+// --- 1. CONFIGURACIÓN DE FIREBASE (IMPORTACIONES) ---
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDhGeyuwMCXhJ3vnOBq2fAHrVOR-ikuJ0Y",
+    authDomain: "encuesta-dc51b.firebaseapp.com",
+    projectId: "encuesta-dc51b",
+    storageBucket: "encuesta-dc51b.firebasestorage.app",
+    messagingSenderId: "617380151220",
+    appId: "1:617380151220:web:13265f507c0f935bb23ce1"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// --- 2. ESTADO GLOBAL Y EVENTOS ---
 document.getElementById('masterExcel').addEventListener('change', handleMasterFile);
 
 let dataState = {
@@ -38,13 +55,50 @@ let dataState = {
         sueldoAdecuado: {},
         herramientasApoyo: {},
         comentariosMejora: [],
-        // Nuevas métricas Bloque 10
         turnosHorarios: {},
         tratoReconocimiento: {},
         mejorasCaseta: [],
         experienciaGeneral: []
     }
 };
+
+// --- 3. FUNCIONES DE PERSISTENCIA (FIREBASE) ---
+
+async function publicarResultados() {
+    try {
+        // Guardamos el objeto dataState completo en la colección "resultados"
+        await setDoc(doc(db, "resultados", "encuesta_actual"), dataState);
+        alert("✅ ¡Éxito! Los resultados ahora son públicos para todos los usuarios.");
+    } catch (error) {
+        console.error("Error al publicar:", error);
+        alert("❌ Error al subir los datos a Firebase.");
+    }
+}
+
+async function cargarResultadosDesdeNube() {
+    try {
+        const docRef = doc(db, "resultados", "encuesta_actual");
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            dataState = docSnap.data();
+            console.log("Datos recuperados de Firebase");
+            
+            // --- AQUÍ ESTÁ EL CAMBIO ---
+            if (typeof actualizarUI === "function") { 
+                actualizarUI(); 
+            }
+            // ---------------------------
+
+            document.getElementById('waitingMessage').classList.add('hidden');
+        }
+    } catch (error) {
+        console.error("Error al cargar datos:", error);
+    }
+}
+
+// Intentar cargar datos automáticamente al entrar a la web
+window.addEventListener('DOMContentLoaded', cargarResultadosDesdeNube);
 
 const MAPEO_FINANCIAMIENTO = {
     "Aportando un poco más al mes para destinarlo a los proyectos de mejora.": "Aportación mensual",
@@ -55,7 +109,7 @@ const MAPEO_FINANCIAMIENTO = {
 
 Chart.register(ChartDataLabels);
 
-// --- LÓGICA MODO ADMINISTRADOR ---
+// --- 4. LÓGICA MODO ADMINISTRADOR ---
 let esAdmin = false;
 const secretLogo = document.getElementById('secretLogo');
 const passwordModal = document.getElementById('passwordModal');
@@ -66,7 +120,6 @@ const adminStickyBar = document.getElementById('adminStickyBar');
 const uploadSection = document.getElementById('uploadSection');
 const waitingMessage = document.getElementById('waitingMessage');
 
-// Referencias a textareas de IA (incluyendo 7 y 8)
 const idsIA = ['txtAnalisisIA_1', 'txtAnalisisIA_2', 'txtAnalisisIA_3', 'txtAnalisisIA_4', 'txtAnalisisIA_5', 'txtAnalisisIA_6', 'txtAnalisisIA_7', 'txtAnalisisIA_8'];
 
 function validarAcceso() {
@@ -105,6 +158,7 @@ function activarModoAdmin() {
         }
     });
 }
+document.getElementById('btnPublicar').addEventListener('click', publicarResultados);
 
 function salirModoAdmin() {
     esAdmin = false;
