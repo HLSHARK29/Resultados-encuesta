@@ -1,0 +1,320 @@
+/* =========================================
+   VARIABLES Y CONFIGURACIÓN BASE
+   ========================================= */
+:root {
+    --blue-primary: #1e88e5;
+    --blue-dark: #1565c0;
+    --teal-accent: #009688;
+    --orange-accent: #f57c00;
+    --bg-light: #f4f7f9;
+    --white: #ffffff;
+    --gray-text: #666;
+    --shadow: 0 4px 15px rgba(0,0,0,0.1);
+    --border-radius: 15px;
+}
+
+body {
+    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: #333;
+    line-height: 1.6;
+}
+
+h2, h3, h4 { 
+    font-family: 'Montserrat', sans-serif; 
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.content-full {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 30px;
+}
+
+/* =========================================
+   BANNER
+   ========================================= */
+.banner-container {
+    width: 100%;
+    height: 250px;
+    background-image: url('https://i.postimg.cc/qqk12PqM/ENCABEZADO.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: var(--border-radius);
+    position: relative;
+    margin-bottom: 30px;
+    box-shadow: var(--shadow);
+}
+
+.banner-logo-top {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    height: 95px;
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.4));
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.banner-logo-top:hover { transform: scale(1.1); }
+
+/* =========================================
+   ZONA DE CARGA Y BOTONES
+   ========================================= */
+.upload-zone {
+    background: var(--white);
+    padding: 45px;
+    border-radius: var(--border-radius);
+    text-align: center;
+    box-shadow: var(--shadow);
+    margin-bottom: 30px;
+}
+
+.btn-main {
+    background: var(--blue-primary);
+    color: white;
+    padding: 16px 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    display: inline-block;
+    margin-top: 20px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    border: none;
+    letter-spacing: 0.5px;
+}
+
+.btn-main:hover {
+    background: var(--blue-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(21, 101, 192, 0.3);
+}
+
+/* =========================================
+   GRID DE ESTADÍSTICAS (KPIs)
+   ========================================= */
+.grid-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.card-stat {
+    background: var(--white);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.card-stat:hover { transform: translateY(-5px); }
+
+.card-stat h3 { 
+    font-size: 3rem; 
+    color: var(--blue-primary); 
+    margin: 0; 
+    line-height: 1;
+}
+
+.card-stat p { 
+    margin: 10px 0 0; 
+    color: var(--gray-text); 
+    font-weight: 600; 
+    font-size: 0.95rem;
+}
+
+.card-stat small {
+    display: block;
+    font-size: 0.75rem;
+    color: #999;
+    font-weight: 400;
+    margin-top: 5px;
+}
+
+.card-stat.alert h3 { color: #ef5350; }
+
+/* =========================================
+   GRID DE GRÁFICAS (DASHBOARD)
+   ========================================= */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+.chart-card {
+    background: var(--white);
+    padding: 25px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    min-height: 450px;
+}
+
+/* El bloque de Preferencia de Servicio abarca todo el ancho si se desea */
+.chart-card.full-width {
+    grid-column: span 2;
+}
+
+.kid-desc {
+    font-size: 0.85rem;
+    color: #777;
+    font-style: italic;
+    margin-bottom: 20px;
+    padding-left: 10px;
+    border-left: 3px solid #ddd;
+}
+
+/* =========================================
+   LISTA DE OPINIONES Y COMENTARIOS
+   ========================================= */
+.opiniones-container {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.opiniones-list {
+    height: 250px;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin-top: 10px;
+}
+
+/* Scrollbar personalizado */
+.opiniones-list::-webkit-scrollbar { width: 6px; }
+.opiniones-list::-webkit-scrollbar-track { background: #f1f1f1; }
+.opiniones-list::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
+
+.opinion-item {
+    padding: 12px;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.85rem;
+    color: #444;
+    background: #fafafa;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.opinion-item strong { color: var(--blue-dark); }
+.opinion-item:hover { background: #f0f7ff; }
+
+/* =========================================
+   ÁREA DE TEXTO IA (ANALISIS)
+   ========================================= */
+.ia-textarea {
+    width: 100%;
+    height: 110px;
+    border: 1px solid transparent;
+    background: #f9f9f9;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13px;
+    color: #444;
+    resize: none;
+    outline: none;
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    line-height: 1.4;
+}
+
+/* =========================================
+   BOTONES DE INTERFAZ
+   ========================================= */
+.btn-copy-prompt {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #333;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s ease;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.btn-copy-prompt:hover {
+    background: var(--orange-accent);
+    transform: scale(1.05);
+}
+
+/* =========================================
+   BARRA Y MODAL ADMINISTRADOR
+   ========================================= */
+#adminStickyBar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: #2c3e50;
+    color: white;
+    padding: 10px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+#passwordModal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-content {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    width: 320px;
+}
+
+.admin-input {
+    width: 100%;
+    padding: 12px;
+    margin: 20px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+/* =========================================
+   UTILIDADES Y RESPONSIVIDAD
+   ========================================= */
+.hidden { display: none !important; }
+
+@media (max-width: 1024px) {
+    .grid-stats { grid-template-columns: repeat(2, 1fr); }
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .chart-card.full-width { grid-column: auto; }
+}
+
+@media (max-width: 768px) {
+    .grid-stats { grid-template-columns: 1fr; }
+    .banner-container { height: 180px; }
+    .content-full { padding: 15px; }
+}
