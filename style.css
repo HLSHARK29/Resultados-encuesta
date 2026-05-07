@@ -318,3 +318,15 @@ h2, h3, h4 {
     .banner-container { height: 180px; }
     .content-full { padding: 15px; }
 }
+
+/* --- Estilo para la firma de la IA --- */
+.ia-tag {
+    display: block;
+    font-size: 10px;
+    color: #888;
+    text-align: right;
+    margin-top: 5px;
+    font-family: 'Montserrat', sans-serif;
+    font-style: italic;
+    letter-spacing: 0.5px;
+}

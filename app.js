@@ -133,13 +133,16 @@ const adminStickyBar = document.getElementById('adminStickyBar');
 const uploadSection = document.getElementById('uploadSection');
 const waitingMessage = document.getElementById('waitingMessage');
 
+// Mantenemos los IDs aquí para que todo el script los reconozca
 const idsIA = ['txtAnalisisIA_1', 'txtAnalisisIA_2', 'txtAnalisisIA_3', 'txtAnalisisIA_4', 'txtAnalisisIA_5', 'txtAnalisisIA_6', 'txtAnalisisIA_7', 'txtAnalisisIA_8'];
 
 function validarAcceso() {
     if (adminPass.value === "Admin2026") {
         activarModoAdmin();
         passwordModal.classList.add('hidden');
-    } else { alert("Contraseña incorrecta."); }
+    } else { 
+        alert("Contraseña incorrecta."); 
+    }
 }
 
 btnEntrar.addEventListener('click', validarAcceso);
@@ -150,7 +153,9 @@ secretLogo.addEventListener('click', () => {
         passwordModal.classList.remove('hidden');
         adminPass.value = '';
         adminPass.focus();
-    } else { salirModoAdmin(); }
+    } else { 
+        salirModoAdmin(); 
+    }
 });
 
 btnCerrar.addEventListener('click', () => passwordModal.classList.add('hidden'));
@@ -160,34 +165,43 @@ function activarModoAdmin() {
     adminStickyBar.classList.remove('hidden');
     uploadSection.classList.remove('hidden');
     waitingMessage.classList.add('hidden');
+    
+    // Mostramos botones de copia de prompt
     document.querySelectorAll('.btn-copy-prompt').forEach(btn => btn.classList.remove('hidden'));
     
+    // ACTIVAMOS LOS TEXTAREAS PARA EDICIÓN
     idsIA.forEach(id => {
         const el = document.getElementById(id);
         if(el) {
-            el.removeAttribute('readonly');
-            el.style.border = "1px dashed #00acc1";
+            el.readOnly = false; // Cambiamos a propiedad directa de JS
+            el.style.border = "1px solid #00acc1";
             el.style.background = "#fff";
+            el.placeholder = "Pega aquí el análisis de la IA...";
         }
     });
 }
-document.getElementById('btnPublicar').addEventListener('click', publicarResultados);
 
 function salirModoAdmin() {
     esAdmin = false;
     adminStickyBar.classList.add('hidden');
     uploadSection.classList.add('hidden');
+    
+    // Ocultamos botones de copia
     document.querySelectorAll('.btn-copy-prompt').forEach(btn => btn.classList.add('hidden'));
     
+    // VOLVEMOS A BLOQUEAR LOS TEXTAREAS
     idsIA.forEach(id => {
         const el = document.getElementById(id);
         if(el) {
-            el.setAttribute('readonly', true);
+            el.readOnly = true; 
             el.style.border = "1px dashed transparent";
             el.style.background = "transparent";
         }
     });
 }
+
+// Vinculamos el botón de publicar (Asegúrate de que este ID coincida con tu botón en la barra roja)
+document.getElementById('btnPublicar').addEventListener('click', publicarResultados);
 
 // --- PROCESAMIENTO DE EXCEL ---
 async function handleMasterFile(e) {
@@ -345,8 +359,11 @@ function consolidarFila(f, tipo) {
 }
 
 function actualizarUI() {
+    // 1. Visibilidad inicial
     document.getElementById('dashboard').classList.remove('hidden');
-    waitingMessage.classList.add('hidden');
+    if (typeof waitingMessage !== 'undefined') waitingMessage.classList.add('hidden');
+
+    // 2. Estadísticas principales
     document.getElementById('txtTotal').textContent = dataState.respuestasConsolidadas.length;
     document.getElementById('txtInvalidados').textContent = dataState.totalInvalidados;
     
@@ -355,42 +372,61 @@ function actualizarUI() {
         document.getElementById('txtSentimiento').textContent = (sumaSat / dataState.respuestasConsolidadas.length).toFixed(1) + " / 5";
     }
 
-    // Listados (Residentes y Representantes)
-    document.getElementById('comentariosProblemas').innerHTML = dataState.comentariosProblemas.map(c => `<p class="opinion-item"><strong>${c.plaza}:</strong> ${c.texto}</p>`).join('') || `<p class="placeholder">Sin comentarios.</p>`;
-    document.getElementById('comentariosContinuidad').innerHTML = dataState.metricasValor.comentariosContinuidad.map(c => `<p class="opinion-item"><strong>${c.plaza}:</strong> ${c.texto}</p>`).join('') || `<p class="placeholder">Sin comentarios.</p>`;
-    document.getElementById('comentariosFinanciamiento').innerHTML = dataState.metricasFinanciamiento.sugerencias.map(c => `<p class="opinion-item"><strong>${c.plaza}:</strong> ${c.texto}</p>`).join('') || `<p class="placeholder">Sin sugerencias.</p>`;
-    document.getElementById('comentariosPreferencia').innerHTML = dataState.metricasServicio.comentarios.map(c => `<p class="opinion-item"><strong>${c.plaza}:</strong> ${c.texto}</p>`).join('') || `<p class="placeholder">Sin comentarios.</p>`;
-    document.getElementById('comentariosMejora').innerHTML = dataState.comentariosMejora.map(c => `<p class="opinion-item"><strong>${c.plaza}:</strong> ${c.texto}</p>`).join('') || `<p class="placeholder">Sin sugerencias de mejora.</p>`;
+    // 3. Listados de comentarios (Residentes)
+    document.getElementById('comentariosProblemas').innerHTML = dataState.comentariosProblemas.map(c => 
+        `<p class="opinion-item"><strong>${c.plaza}:</strong> ${c.texto}</p>`).join('') || `<p class="placeholder">Sin comentarios.</p>`;
     
-    // Bloque 8: Porteros
+    document.getElementById('comentariosContinuidad').innerHTML = dataState.metricasValor.comentariosContinuidad.map(c => 
+        `<p class="opinion-item"><strong>${c.plaza}:</strong> ${c.texto}</p>`).join('') || `<p class="placeholder">Sin comentarios.</p>`;
+    
+    document.getElementById('comentariosFinanciamiento').innerHTML = dataState.metricasFinanciamiento.sugerencias.map(c => 
+        `<p class="opinion-item"><strong>${c.plaza}:</strong> ${c.texto}</p>`).join('') || `<p class="placeholder">Sin sugerencias.</p>`;
+    
+    document.getElementById('comentariosPreferencia').innerHTML = dataState.metricasServicio.comentarios.map(c => 
+        `<p class="opinion-item"><strong>${c.plaza}:</strong> ${c.texto}</p>`).join('') || `<p class="placeholder">Sin comentarios.</p>`;
+    
+    document.getElementById('comentariosMejora').innerHTML = dataState.comentariosMejora.map(c => 
+        `<p class="opinion-item"><strong>${c.plaza}:</strong> ${c.texto}</p>`).join('') || `<p class="placeholder">Sin sugerencias de mejora.</p>`;
+    
+    // 4. Bloque 8: Porteros
     const containerPorteros = document.getElementById('comentariosPorteros');
     if (containerPorteros) {
-        containerPorteros.innerHTML = dataState.metricasPorteros.comentariosMejora.map(c => `<p class="opinion-item"><strong>${c.plaza}:</strong> ${c.texto}</p>`).join('') || `<p class="placeholder">Sin comentarios del personal.</p>`;
+        containerPorteros.innerHTML = dataState.metricasPorteros.comentariosMejora.map(c => 
+            `<p class="opinion-item"><strong>${c.plaza}:</strong> ${c.texto}</p>`).join('') || `<p class="placeholder">Sin comentarios del personal.</p>`;
     }
 
-    // NUEVOS Listados Bloque 10
+    // 5. Bloque 10: Mejoras Caseta y Experiencia
     const containerMejorasCaseta = document.getElementById('comentariosMejorasCaseta');
     if(containerMejorasCaseta) {
-        containerMejorasCaseta.innerHTML = dataState.metricasPorteros.mejorasCaseta.map(c => `<p class="opinion-item"><strong>${c.plaza}:</strong> ${c.texto}</p>`).join('') || `<p class="placeholder">Sin propuestas.</p>`;
+        containerMejorasCaseta.innerHTML = dataState.metricasPorteros.mejorasCaseta.map(c => 
+            `<p class="opinion-item"><strong>${c.plaza}:</strong> ${c.texto}</p>`).join('') || `<p class="placeholder">Sin propuestas.</p>`;
     }
     const containerExpPortero = document.getElementById('comentariosExperienciaPortero');
     if(containerExpPortero) {
-        containerExpPortero.innerHTML = dataState.metricasPorteros.experienciaGeneral.map(c => `<p class="opinion-item"><strong>${c.plaza}:</strong> ${c.texto}</p>`).join('') || `<p class="placeholder">Sin comentarios adicionales.</p>`;
+        containerExpPortero.innerHTML = dataState.metricasPorteros.experienciaGeneral.map(c => 
+            `<p class="opinion-item"><strong>${c.plaza}:</strong> ${c.texto}</p>`).join('') || `<p class="placeholder">Sin comentarios adicionales.</p>`;
     }
 
-    // --- NUEVO: CARGAR TEXTOS DE ANÁLISIS IA GUARDADOS ---
+    // 6. CARGAR ANÁLISIS IA (El ajuste clave)
     if (dataState.analisisIA) {
         Object.keys(dataState.analisisIA).forEach(id => {
             const el = document.getElementById(id);
             if (el) {
+                // Cargamos el texto guardado
                 el.value = dataState.analisisIA[id];
+                
+                // Ajuste visual: Si hay contenido, estiramos el cuadro para que se vea todo
+                if (el.value.trim() !== "") {
+                    el.style.height = 'auto';
+                    el.style.height = (el.scrollHeight) + 'px';
+                }
             }
         });
     }
-    // ----------------------------------------------------
 
-    generarAnalisisAutomatico();
-    renderCharts();
+    // 7. Renderizado final
+    if (typeof generarAnalisisAutomatico === 'function') generarAnalisisAutomatico();
+    if (typeof renderCharts === 'function') renderCharts();
 }
 
 function generarAnalisisAutomatico() {
@@ -418,7 +454,7 @@ function renderCharts() {
         }));
     };
 
-    // 1. Participación (Corregido con formato: % (Actual/Total))
+    // 1. Participación (Sin cambios)
     const ctxPart = document.getElementById('chartParticipacion')?.getContext('2d');
     if(ctxPart) {
         window.activeCharts.push(new Chart(ctxPart, {
@@ -437,16 +473,9 @@ function renderCharts() {
                     datalabels: { 
                         ...opt.plugins.datalabels, 
                         formatter: (value, ctx) => {
-                            // Buscamos los datos de la plaza actual usando el índice
                             const p = dataState.participacion[ctx.dataIndex];
-                            
-                            // Si por algo no hay datos, ponemos 0
                             if (!p || p.total === 0) return '0%';
-                            
-                            // Calculamos el porcentaje
                             const percentage = ((p.respondieron / p.total) * 100).toFixed(0);
-                            
-                            // Devolvemos el texto con el formato: 92% (23/25)
                             return `${percentage}% (${p.respondieron}/${p.total})`;
                         }
                     }
@@ -459,11 +488,19 @@ function renderCharts() {
     draw('chartProblemasCaseta', 'pie', ['Sí', 'No'], [dataState.conteoProblemas["Sí"], dataState.conteoProblemas["No"]], ['#ef5350', '#66bb6a']);
     draw('chartImpacto', 'bar', Object.keys(dataState.metricasValor.impacto).sort(), Object.values(dataState.metricasValor.impacto), '#42a5f5');
     draw('chartValor', 'bar', Object.keys(dataState.metricasValor.valor).sort(), Object.values(dataState.metricasValor.valor), '#673ab7');
-    draw('chartContinuidad', 'pie', ['Sí', 'No'], [dataState.metricasValor.continuidad["Sí"], dataState.metricasValor.continuidad["No"]], ['#ba68c8', '#4db6ac']);
+
+    // --- CAMBIO AQUÍ: Gráfica de Continuidad (Positivizada) ---
+    // Explicación: Invertimos el orden para que "No han pensado dejarlo" sea "Desean Continuar" (Verde)
+    draw('chartContinuidad', 'pie', 
+        ['Desean Continuar', 'Han Dudado'], 
+        [dataState.metricasValor.continuidad["No"], dataState.metricasValor.continuidad["Sí"]], 
+        ['#22b290', '#d985ec']
+    );
+
     draw('chartFinanciamiento', 'pie', Object.keys(dataState.metricasFinanciamiento.conteo), Object.values(dataState.metricasFinanciamiento.conteo), ['#4CAF50', '#2196F3', '#F44336']);
     draw('chartPreferenciaServicio', 'pie', Object.keys(dataState.metricasServicio.conteo), Object.values(dataState.metricasServicio.conteo), ['#009688', '#ff7043', '#9e9e9e']);
     
-    const colRep = ['#546e7a', '#78909c', '#90a4ae', '#b0bec5', '#cfd8dc'];
+    const colRep = ['#4fab49', '#1e5a78', '#f7f74d', '#ed1212', '#de31b3'];
     draw('chartConoceRep', 'pie', Object.keys(dataState.metricasRepresentantes.conoce), Object.values(dataState.metricasRepresentantes.conoce), colRep);
     draw('chartFuncionRep', 'pie', Object.keys(dataState.metricasRepresentantes.funcion), Object.values(dataState.metricasRepresentantes.funcion), colRep);
     draw('chartSatisfaccionRep', 'bar', Object.keys(dataState.metricasRepresentantes.satisfaccion).sort(), Object.values(dataState.metricasRepresentantes.satisfaccion), '#546e7a');
@@ -475,8 +512,7 @@ function renderCharts() {
     draw('chartSueldoPortero', 'pie', Object.keys(dataState.metricasPorteros.sueldoAdecuado), Object.values(dataState.metricasPorteros.sueldoAdecuado), colP);
     draw('chartHerramientasPortero', 'doughnut', Object.keys(dataState.metricasPorteros.herramientasApoyo), Object.values(dataState.metricasPorteros.herramientasApoyo), ['#4db6ac', '#f06292', '#9575cd']);
     
-    // Gráficos Nuevos (Bloque 10)
-    const colCian = ['#00acc1', '#26c6da', '#4dd0e1', '#80deea', '#b2ebf2'];
+    const colCian = ['#00acc1', '#0b1385', '#a0359c', '#d34c77', '#9a1717'];
     draw('chartTurnosPortero', 'bar', Object.keys(dataState.metricasPorteros.turnosHorarios).sort(), Object.values(dataState.metricasPorteros.turnosHorarios), '#00acc1');
     draw('chartTratoPortero', 'pie', Object.keys(dataState.metricasPorteros.tratoReconocimiento), Object.values(dataState.metricasPorteros.tratoReconocimiento), colCian);
 }
