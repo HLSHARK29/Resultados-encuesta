@@ -15,6 +15,9 @@
     <div id="adminStickyBar" class="hidden" style="position: sticky; top: 0; left: 0; width: 100%; background: #d32f2f; color: white; text-align: center; padding: 10px; font-weight: bold; z-index: 9999; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-family: 'Montserrat', sans-serif;">
         ⚠️ MODO ADMINISTRADOR ACTIVO (Carga y Edición habilitada)
         <button id="btnPublicar" style="margin-left: 20px; padding: 5px 15px; background: white; color: #d32f2f; border: none; border-radius: 4px; cursor: pointer; font-family: 'Montserrat', sans-serif;">Publicar Resultados</button>
+        <button onclick="copiarPromptMaestro()" style="margin-left: 10px; padding: 5px 15px; background: #2ecc71; color: white; border: none; border-radius: 4px; cursor: pointer; font-family: 'Montserrat', sans-serif;">
+        Copiar Reporte Maestro
+        </button>
     </div>
 
     <main class="content-full">
@@ -77,7 +80,7 @@
                             <h4 style="margin: 0 0 8px 0; color: #1565c0;">Análisis de Comentarios 🤖</h4>
                             <button class="btn-copy-prompt hidden" onclick="copiarPromptAnalisis(1)">Copiar Prompt</button>
                             <textarea id="txtAnalisisIA_1" readonly placeholder="Conclusiones sobre inconformidades..." style="width: 100%; height: 100%; min-height: 80px; border: 1px dashed transparent; background: transparent; font-family: 'Open Sans', sans-serif; font-size: 13px; color: #333; resize: none; outline: none;"></textarea>
-                            <span class="ia-tag">✨ Análisis generado por IA </span>
+                            <span class="ia-tag">✨ Análisis generado por IA (Plazas Insight) </span>
                         </div>
                     </div>
                 </div>
@@ -111,7 +114,7 @@
                         <h4 style="margin: 0 0 10px 0; color: #4a148c; font-size: 16px;">Análisis de Continuidad 🤖</h4>
                         <button class="btn-copy-prompt hidden" onclick="copiarPromptAnalisis(2)">Copiar Prompt</button>
                         <textarea id="txtAnalisisIA_2" readonly placeholder="Conclusiones sobre valor y continuidad..." style="width: 100%; min-height: 100px; border: none; background: transparent; font-family: 'Open Sans', sans-serif; font-size: 14px; color: #333; resize: vertical; outline: none; line-height: 1.6;"></textarea>
-                        <span class="ia-tag">✨ Análisis generado por IA </span>
+                        <span class="ia-tag">✨ Análisis generado por IA (Plazas Insight) </span>
                     </div>
                 </div>
             </div>
@@ -136,7 +139,7 @@
                             <h4 style="margin: 0 0 8px 0; color: #e65100;">Análisis de Financiamiento 🤖</h4>
                             <button class="btn-copy-prompt hidden" onclick="copiarPromptAnalisis(3)">Copiar Prompt</button>
                             <textarea id="txtAnalisisIA_3" readonly placeholder="Análisis de preferencias..." style="width: 100%; height: 100%; min-height: 80px; border: 1px dashed transparent; background: transparent; font-family: 'Open Sans', sans-serif; font-size: 13px; color: #333; resize: none; outline: none;"></textarea>
-                            <span class="ia-tag">✨ Análisis generado por IA </span>
+                            <span class="ia-tag">✨ Análisis generado por IA (Plazas Insight) </span>
                         </div>
                     </div>
                 </div>
@@ -162,7 +165,7 @@
                             <h4 style="margin: 0 0 8px 0; color: #00796b;">Análisis de Servicio 🤖</h4>
                             <button class="btn-copy-prompt hidden" onclick="copiarPromptAnalisis(4)">Copiar Prompt</button>
                             <textarea id="txtAnalisisIA_4" readonly placeholder="Análisis de tendencia..." style="width: 100%; height: 100%; min-height: 80px; border: 1px dashed transparent; background: transparent; font-family: 'Open Sans', sans-serif; font-size: 13px; color: #333; resize: none; outline: none;"></textarea>
-                            <span class="ia-tag">✨ Análisis generado por IA </span>
+                            <span class="ia-tag">✨ Análisis generado por IA (Plazas Insight) </span>
                         </div>
                     </div>
                 </div>
@@ -181,7 +184,7 @@
                         <h4 style="margin: 0 0 8px 0; color: #c62828;">Análisis de Tendencias 🤖</h4>
                         <button class="btn-copy-prompt hidden" onclick="copiarPromptAnalisis(5)">Copiar Prompt</button>
                         <textarea id="txtAnalisisIA_5" readonly placeholder="Análisis y listado de sugerencias..." style="width: 100%; height: 100%; min-height: 250px; border: 1px dashed transparent; background: transparent; font-family: 'Open Sans', sans-serif; font-size: 13px; color: #333; resize: none; outline: none; line-height: 1.5;"></textarea>
-                        <span class="ia-tag">✨ Análisis generado por IA </span>
+                        <span class="ia-tag">✨ Análisis generado por IA (Plazas Insight) </span>
                     </div>
                 </div>
             </div>
@@ -249,7 +252,7 @@
                         <h4 style="margin: 0 0 8px 0; color: #4a148c;">Análisis de Necesidades 🤖</h4>
                         <button class="btn-copy-prompt hidden" onclick="copiarPromptAnalisis(6)">Copiar Prompt</button>
                         <textarea id="txtAnalisisIA_6" readonly placeholder="Análisis de lo que el personal requiere..." style="width: 100%; height: 100%; min-height: 120px; border: none; background: transparent; font-family: 'Open Sans', sans-serif; font-size: 13px; color: #333; resize: none; outline: none;"></textarea>
-                        <span class="ia-tag">✨ Análisis generado por IA </span>
+                        <span class="ia-tag">✨ Análisis generado por IA (Plazas Insight) </span>
                     </div>
                 </div>
             </div>
@@ -284,7 +287,7 @@
                             <h4 style="margin: 0 0 8px 0; color: #006064;">Análisis de Mejoras 🤖</h4>
                             <button class="btn-copy-prompt hidden" onclick="copiarPromptAnalisis(7)">Copiar Prompt</button>
                             <textarea id="txtAnalisisIA_7" readonly placeholder="Conclusiones sobre el espacio de trabajo..." style="width: 100%; height: 100%; min-height: 100px; border: none; background: transparent; font-family: 'Open Sans', sans-serif; font-size: 13px; color: #333; resize: none; outline: none;"></textarea>
-                            <span class="ia-tag">✨ Análisis generado por IA </span>
+                            <span class="ia-tag">✨ Análisis generado por IA (Plazas Insight) </span>
                         </div>
                     </div>
 
@@ -299,7 +302,7 @@
                             <h4 style="margin: 0 0 8px 0; color: #006064;">Análisis de Experiencia 🤖</h4>
                             <button class="btn-copy-prompt hidden" onclick="copiarPromptAnalisis(8)">Copiar Prompt</button>
                             <textarea id="txtAnalisisIA_8" readonly placeholder="Resumen de la vivencia laboral..." style="width: 100%; height: 100%; min-height: 100px; border: none; background: transparent; font-family: 'Open Sans', sans-serif; font-size: 13px; color: #333; resize: none; outline: none;"></textarea>
-                            <span class="ia-tag">✨ Análisis generado por IA </span>
+                            <span class="ia-tag">✨ Análisis generado por IA (Plazas Insight) </span>
                         </div>
                     </div>
                 </div>
@@ -316,6 +319,31 @@
             <button id="btnCerrar" style="background: none; border: none; color: #777; cursor: pointer; font-size: 12px;">Cancelar</button>
         </div>
     </div>
+
+    <!-- SECCIÓN DE CIERRE ESTRATÉGICO: PLAZAS INSIGHT -->
+<section id="seccionConclusion" class="container" style="margin-top: 50px; margin-bottom: 80px;">
+    <div style="background: white; border-radius: 12px; border-left: 8px solid #d32f2f; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 30px;">
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <span style="font-size: 2rem; margin-right: 15px;">📊</span>
+            <h2 style="font-family: 'Montserrat', sans-serif; color: #333; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
+                Conclusión de Plazas Insight
+            </h2>
+        </div>
+        
+        <div id="contenidoConclusion" style="font-family: 'Montserrat', sans-serif; color: #444; line-height: 1.8; font-size: 1.1rem; white-space: pre-line;">
+            <p style="color: #888; font-style: italic;">
+                El análisis final está siendo procesado. Una vez generado, aparecerá en este espacio para consulta de todos los residentes.
+            </p>
+        </div>
+        
+        <!-- Botón de edición oculto (Solo Admin) -->
+        <div class="admin-only hidden" style="margin-top: 25px; border-top: 1px solid #eee; padding-top: 15px;">
+            <button onclick="editarConclusion()" style="background: #34495e; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">
+                📝 Editar Conclusión (Admin)
+            </button>
+        </div>
+    </div>
+</section>
 
     <script type="module" src="app.js"></script>
 </body>

@@ -66,25 +66,38 @@ let dataState = {
 
 async function publicarResultados() {
     try {
-        // 1. Forzamos a que dataState tenga una sección para los análisis
-        dataState.analisisIA = {}; 
+        // 1. Aseguramos que la sección de análisis exista
+        dataState.analisisIA = dataState.analisisIA || {}; 
 
-        // 2. Recorremos los IDs de tus cuadros de texto (los que definimos arriba)
+        // 2. Agregamos la conclusión al objeto (usamos innerText porque es un DIV)
+        const elConclusion = document.getElementById('contenidoConclusion');
+        if (elConclusion) {
+            dataState.analisisIA['txtConclusionFinal'] = elConclusion.innerText;
+        }
+
+        // 3. Recorremos los demás IDs de los cuadros de texto normales
         idsIA.forEach(id => {
             const el = document.getElementById(id);
             if (el) {
-                // Guardamos el valor actual que escribiste en el cuadro
                 dataState.analisisIA[id] = el.value; 
             }
         });
 
-        // 3. Enviamos el objeto completo a Firebase
+        // 4. Enviamos el objeto completo a Firebase
         await setDoc(doc(db, "resultados", "encuesta_actual"), dataState);
         
-        alert("✅ ¡Éxito! Se han guardado los datos y tus análisis de texto.");
+        // --- 5. LIMPIEZA DE INTERFAZ (POST-GUARDADO) ---
+        // Volvemos a bloquear el contenedor para que no se edite por accidente
+        if (elConclusion) {
+            elConclusion.contentEditable = "false";
+            elConclusion.style.backgroundColor = "transparent"; // Quitamos el color de edición
+            elConclusion.style.border = "none"; // Quitamos el borde punteado
+        }
+
+        alert("✅ ¡Éxito! Se han guardado los datos y la conclusión final.");
     } catch (error) {
         console.error("Error al publicar:", error);
-        alert("❌ Error: No se pudo guardar en la nube. Revisa la consola.");
+        alert("❌ Error: No se pudo guardar en la nube.");
     }
 }
 
@@ -96,12 +109,18 @@ async function cargarResultadosDesdeNube() {
         if (docSnap.exists()) {
             dataState = docSnap.data();
             console.log("Datos recuperados de Firebase");
+
+            // --- CARGA DE LA CONCLUSIÓN FINAL ---
+            // Buscamos si existe la etiqueta en Firebase y la ponemos en el div
+            const divConclusion = document.getElementById('contenidoConclusion');
+            if (divConclusion && dataState.analisisIA && dataState.analisisIA.txtConclusionFinal) {
+                divConclusion.innerText = dataState.analisisIA.txtConclusionFinal;
+            }
+            // ------------------------------------
             
-            // --- AQUÍ ESTÁ EL CAMBIO ---
             if (typeof actualizarUI === "function") { 
                 actualizarUI(); 
             }
-            // ---------------------------
 
             document.getElementById('waitingMessage').classList.add('hidden');
         }
@@ -133,7 +152,7 @@ const adminStickyBar = document.getElementById('adminStickyBar');
 const uploadSection = document.getElementById('uploadSection');
 const waitingMessage = document.getElementById('waitingMessage');
 
-// Mantenemos los IDs aquí para que todo el script los reconozca
+// IDs de los textareas de análisis por pregunta
 const idsIA = ['txtAnalisisIA_1', 'txtAnalisisIA_2', 'txtAnalisisIA_3', 'txtAnalisisIA_4', 'txtAnalisisIA_5', 'txtAnalisisIA_6', 'txtAnalisisIA_7', 'txtAnalisisIA_8'];
 
 function validarAcceso() {
@@ -154,7 +173,10 @@ secretLogo.addEventListener('click', () => {
         adminPass.value = '';
         adminPass.focus();
     } else { 
-        salirModoAdmin(); 
+        // Si ya es admin, el clic podría servir para cerrar sesión si tienes esa función
+        if(confirm("¿Deseas salir del modo administrador?")) {
+            location.reload(); // Forma rápida de resetear el estado
+        }
     }
 });
 
@@ -169,16 +191,25 @@ function activarModoAdmin() {
     // Mostramos botones de copia de prompt
     document.querySelectorAll('.btn-copy-prompt').forEach(btn => btn.classList.remove('hidden'));
     
-    // ACTIVAMOS LOS TEXTAREAS PARA EDICIÓN
+    // 1. ACTIVAMOS LOS TEXTAREAS (Análisis por pregunta)
     idsIA.forEach(id => {
         const el = document.getElementById(id);
         if(el) {
-            el.readOnly = false; // Cambiamos a propiedad directa de JS
+            el.readOnly = false;
             el.style.border = "1px solid #00acc1";
             el.style.background = "#fff";
             el.placeholder = "Pega aquí el análisis de la IA...";
         }
     });
+
+    // 2. ACTIVAMOS EL CONTENEDOR DE CONCLUSIÓN (El DIV de diseño)
+    const areaConclusion = document.getElementById('contenidoConclusion');
+    if (areaConclusion) {
+        areaConclusion.contentEditable = "true"; 
+        areaConclusion.style.backgroundColor = "#fffde7"; // Tono crema para resaltar edición
+        areaConclusion.style.border = "2px dashed #d32f2f"; // Borde punteado distintivo
+        areaConclusion.focus(); // Ponemos el foco para que sepas que ya puedes pegar
+    }
 }
 
 function salirModoAdmin() {
@@ -430,16 +461,12 @@ function actualizarUI() {
 }
 
 function generarAnalisisAutomatico() {
-    // Se comenta esta lógica para permitir que el análisis profesional 
-    // guardado en Firebase se muestre sin interferencias.
-    /*
     const txt4 = document.getElementById('txtAnalisisIA_4');
     if (txt4 && (!esAdmin || txt4.value.trim() === "")) {
         const actual = dataState.metricasServicio.conteo["Servicio Actual"] || 0;
         const privada = dataState.metricasServicio.conteo["Empresa Privada"] || 0;
         txt4.value = actual > privada ? "Preferencia: Servicio Actual." : (privada > actual ? "Preferencia: Seguridad Privada." : "Empate técnico.");
     }
-    */
 }
 
 function renderCharts() {
@@ -501,7 +528,7 @@ function renderCharts() {
         ['#22b290', '#d985ec']
     );
 
-    draw('chartFinanciamiento', 'pie', Object.keys(dataState.metricasFinanciamiento.conteo), Object.values(dataState.metricasFinanciamiento.conteo), ['#4CAF50', '#2196F3', '#F44336']);
+    draw('chartFinanciamiento', 'pie', Object.keys(dataState.metricasFinanciamiento.conteo), Object.values(dataState.metricasFinanciamiento.conteo), ['#4CAF50', '#2196F3', '#F44336', '#9C27B0']);
     draw('chartPreferenciaServicio', 'pie', Object.keys(dataState.metricasServicio.conteo), Object.values(dataState.metricasServicio.conteo), ['#009688', '#ff7043', '#9e9e9e']);
     
     const colRep = ['#4fab49', '#1e5a78', '#f7f74d', '#ed1212', '#de31b3'];
@@ -537,3 +564,48 @@ function copiarPromptAnalisis(bloque) {
     const prompt = `Analista experto. TEMA: ${titulo}.\nOBJETIVO: ${esListado ? "Lista 5 bullets" : "Párrafo 5 líneas"}.\nDATOS:\n${lista}`;
     navigator.clipboard.writeText(prompt).then(() => alert("Prompt copiado."));
 }
+
+function copiarPromptMaestro() {
+    // 1. Extraemos directamente de la data recuperada de Firebase
+    // Usamos las llaves exactas que se ven en tu consola: txtAnalisisIA_X
+    const analSrv = dataState.analisisIA?.txtAnalisisIA_4 || "Información de servicio no recuperada";
+    const analCaseta = dataState.analisisIA?.txtAnalisisIA_5 || "Información de caseta no recuperada";
+    const analPersonal = dataState.analisisIA?.txtAnalisisIA_6 || "Información de personal no recuperada";
+
+    // 2. Construimos el Reporte Maestro para Plazas Insight
+    const prompt = `
+ESTUDIO DE OPINIÓN RESIDENCIAL: PLAZAS INSIGHT
+
+Hola Gemini, actúa como un experto en comunicación comunitaria. Analiza los resultados consolidados de nuestra encuesta y genera una conclusión final dirigida a los residentes. 
+
+--- 
+RESULTADOS EXTRAÍDOS DE FIREBASE:
+
+1. PREFERENCIA DE SERVICIO (ADMINISTRACIÓN VS SEGURIDAD):
+${analSrv}
+
+2. INFRAESTRUCTURA Y CONDICIONES EN CASETA:
+${analCaseta}
+
+3. CLIMA LABORAL Y EXPERIENCIA DEL PERSONAL:
+${analPersonal}
+---
+
+INSTRUCCIONES PARA LA CONCLUSIÓN:
+- Título: "Conclusión de Plazas Insight".
+- Explica qué opina la comunidad basándote en los datos anteriores.
+- Justifica las decisiones y mejoras que los representantes deben tomar.
+- Usa un tono que brinde certidumbre y transparencia a los residentes.
+`;
+
+    // 3. Copiar al portapapeles
+    navigator.clipboard.writeText(prompt.trim()).then(() => {
+        alert("✅ Reporte Maestro de Plazas Insight copiado directamente desde Firebase.");
+    }).catch(err => {
+        console.error('Error al copiar:', err);
+        alert("Error al acceder al portapapeles.");
+    });
+}
+
+// Aseguramos que sea accesible globalmente para el botón del HTML
+window.copiarPromptMaestro = copiarPromptMaestro;

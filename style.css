@@ -330,3 +330,56 @@ h2, h3, h4 {
     font-style: italic;
     letter-spacing: 0.5px;
 }
+
+/* Botón Maestro Plazas Insight */
+#adminStickyBar button:last-child {
+    background: #2ecc71 !important; /* Verde esmeralda para resaltar */
+    color: white !important;
+    font-weight: 600;
+    transition: background 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#adminStickyBar button:last-child:active {
+    background: #27ae60 !important; /* Verde más oscuro al presionar */
+    transform: scale(0.95); /* Efecto de pulsación */
+}
+
+/* Ajuste para móviles: si la barra se ve muy amontonada */
+@media (max-width: 600px) {
+    #adminStickyBar {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+        padding: 15px 10px;
+    }
+
+    #adminStickyBar button {
+        margin-left: 0 !important;
+        width: 90%; /* Botones más anchos para facilitar el clic con el pulgar */
+        padding: 10px !important;
+    }
+}
+
+#contenidoConclusion {
+    text-align: justify;
+    background: #fdfdfd;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+#contenidoConclusion h3 {
+    color: #d32f2f;
+    margin-top: 25px;
+}
+
+/* Efecto de entrada suave */
+#seccionConclusion {
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
