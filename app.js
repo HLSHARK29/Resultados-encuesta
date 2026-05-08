@@ -430,12 +430,16 @@ function actualizarUI() {
 }
 
 function generarAnalisisAutomatico() {
+    // Se comenta esta lógica para permitir que el análisis profesional 
+    // guardado en Firebase se muestre sin interferencias.
+    /*
     const txt4 = document.getElementById('txtAnalisisIA_4');
     if (txt4 && (!esAdmin || txt4.value.trim() === "")) {
         const actual = dataState.metricasServicio.conteo["Servicio Actual"] || 0;
         const privada = dataState.metricasServicio.conteo["Empresa Privada"] || 0;
         txt4.value = actual > privada ? "Preferencia: Servicio Actual." : (privada > actual ? "Preferencia: Seguridad Privada." : "Empate técnico.");
     }
+    */
 }
 
 function renderCharts() {
